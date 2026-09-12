@@ -1,0 +1,5 @@
+{
+  "code-runner.executorMap": {
+    "c": "cd $dir && gcc *.c -o game -lraylib -lm -lpthread -ldl && ./game"
+  }
+}
