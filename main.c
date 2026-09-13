@@ -18,6 +18,7 @@ static void ResetGame(void) {
     speed = 300;
     score = 0;
     Progress_Reset();
+    Progress_ResetLives();
     for (int i = 0; i < MAX; i++) {
         e[i].x = (float)GetRandomValue(0, 1880);
         e[i].y = -40 - i * 250;
@@ -68,8 +69,9 @@ static void UpdateDrawFrame(void) {
     for (int i = 0; i < MAX; i++) {
         Rectangle er = { e[i].x, e[i].y, 40, 40 };
         if (CheckCollisionRecs(player, er)) {
-            state = GAMEOVER;
-            break;
+            Progress_Hit();
+            if (!Progress_HasLives()) { state = GAMEOVER; break; }
+            player = (Rectangle){ x, y, 40, 40 };
         }
     }
     if (state != PLAYING) return;
@@ -78,6 +80,7 @@ static void UpdateDrawFrame(void) {
     const char *stext = TextFormat("%d", (int)score);
     int sw = MeasureText(stext, 50);
     DrawText(stext, 1920 - sw - 60, 30, 50, GRAY);
+    Progress_DrawLives();
     DrawRectangle((int)x, (int)y, 40, 40, WHITE);
     for (int i = 0; i < MAX; i++) {
         DrawRectangle((int)e[i].x, (int)e[i].y, 40, 40, RED);
