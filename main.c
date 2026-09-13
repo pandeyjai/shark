@@ -1,5 +1,6 @@
-#include <raylib.h>
+#include <raylib.h> 
 #include "menu.h"
+#include "progress.h"
 #ifdef __EMSCRIPTEN__
 #include <emscripten/emscripten.h>
 #endif
@@ -13,11 +14,14 @@ static State state = MENU;
 
 static void ResetGame(void) {
     x = 870;
+    y = 880;
+    speed = 300;
     score = 0;
+    Progress_Reset();
     for (int i = 0; i < MAX; i++) {
         e[i].x = (float)GetRandomValue(0, 1880);
         e[i].y = -40 - i * 250;
-        e[i].speed = 500;
+        e[i].speed = Progress_GetEnemySpeed();
     }
 }
 
@@ -50,12 +54,14 @@ static void UpdateDrawFrame(void) {
     }
     if (IsKeyDown(KEY_RIGHT)) x += speed * dt;
     if (IsKeyDown(KEY_LEFT)) x -= speed * dt;
-    score += 5 * dt;
+    Progress_Update(dt);
+    score += Progress_GetScoreDelta(dt);
     for (int i = 0; i < MAX; i++) {
         e[i].y += e[i].speed * dt;
         if (e[i].y > 1080) {
             e[i].y = -40;
             e[i].x = (float)GetRandomValue(0, 1880);
+            e[i].speed = Progress_GetEnemySpeed();
         }
     }
     Rectangle player = { x, y, 40, 40 };
