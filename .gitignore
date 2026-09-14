@@ -1,0 +1,15 @@
+# binaries and editor
+game
+game.exe
+*.swp
+*.swo
+
+# build output
+dist/
+build/
+
+# emscripten sdk cache
+emsdk/
+
+# node
+node_modules/
